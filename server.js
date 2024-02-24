@@ -1,31 +1,19 @@
 const express = require("express");
 
+const friendsController = require("./controllers/friends.controller");
+const messagesController = require("./controllers/messages.controller");
+
 const app = express();
 
 const PORT = 3000;
 
-const friends = [
-  { id: 0, name: "Albert Einstein" },
-  { id: 1, name: "Issac Newton" },
-  { id: 2, name: "Nikola Tesla" },
-];
+app.use(express.json());
 
-app.get("/friends", (req, res) => {
-  res.status(200).json(friends);
-});
+app.get("/friends", friendsController.getAllFriends);
+app.get("/friends/:id", friendsController.getOneFriend);
+app.post("/friends", friendsController.addFriend);
 
-app.get("/friends/:id", (req, res) => {
-  const { id } = req.params;
-  const friend = friends.find((friend) => friend.id === +id);
-  if (friend) {
-    res.status(200).json(friend);
-  } else {
-    res.status(404).json({ error: "Friend not found" });
-  }
-});
-
-app.get("/messages", (req, res) => {
-  res.status(200).send("<ul><li>List Item One</li><li>List Item Two</li></ul>");
-});
+app.get("/messages", messagesController.getMessages);
+app.post("/messages", messagesController.addMessage);
 
 app.listen(PORT, () => console.log(`listening on ${PORT}...`));
